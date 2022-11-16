@@ -24,6 +24,7 @@ export function Counter() {
         <button
           className={styles.button}
           aria-label="Decrement value"
+          // これはcounterSliceで定義したreducersの中のアクションをdispatchで呼び出している
           onClick={() => dispatch(decrement())}
         >
           -
