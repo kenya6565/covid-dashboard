@@ -17,6 +17,7 @@ type covidState = {
   dailyData: APIDATADAILY;
 };
 
+// このstateはstoreに保持されているcomponentのstateとは別のstate
 const initialState: covidState = {
   data: {
     confirmed: {
@@ -81,3 +82,78 @@ const initialState: covidState = {
     },
   ],
 };
+
+// createAsyncThunkは非同期の関数を作るもの
+// 第一引数にアクション名、第二引数に非同期の関数
+export const fetchAsyncGet = createAsyncThunk("covid/get", async () => {
+  // axiosはfetchAPIみたいなやつ
+  //   axiosを通じてurlにアクセスしてデータをゲット;
+  const { data } = await axios.get<APIDATA>(apiUrl);
+  return data;
+});
+
+// こっちは日時別を取得する関数
+export const fetchAsyncGetDaily = createAsyncThunk(
+  "covid/getDaily",
+  async () => {
+    const { data } = await axios.get<APIDATADAILY>(`${apiUrl}/daily`);
+    return data;
+  }
+);
+
+// ある国の感染者数の取得関数
+export const fetchAsyncGetCountry = createAsyncThunk(
+  "covid/getCountry",
+  //countryを受け取ってその国に応じたurlにアクセスする
+  async (country: string) => {
+    // countryがない場合はurlはそのまま
+    let dynamicUrl = apiUrl;
+    // countryがない場合もある
+    if (country) {
+      dynamicUrl = `${apiUrl}/countries/${country}`;
+    }
+    const { data } = await axios.get<APIDATA>(dynamicUrl);
+    return { data: data, country: country };
+  }
+);
+
+const covidSlice = createSlice({
+  name: "covid",
+  initialState: initialState,
+  reducers: {},
+  //   ここから非同期処理の後処理
+  extraReducers: (builder) => {
+    // fulfilled =　通常終了した
+    builder.addCase(fetchAsyncGet.fulfilled, (state, action) => {
+      return {
+        // ここでstateに対してdataをセットする
+        // ..stateでstateの中のdataとcountryとdailyDataを展開して、
+        // その後展開したdataにaction.payloadの値を設定し、stateの中身を全て返す
+        ...state,
+        // action.payloadでapiUrlから取得したdataを取得できる。
+        data: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncGetDaily.fulfilled, (state, action) => {
+      return {
+        ...state,
+        dailyData: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncGetCountry.fulfilled, (state, action) => {
+      return {
+        ...state,
+        // fetchAsyncGetCountryの戻り値は{}なので.dataと.country必要
+        data: action.payload.data,
+        country: action.payload.country,
+      };
+    });
+  },
+});
+
+// react componentからstoreのstateを呼び出せるように設定
+// store内のstateにアクセスして返す関数を定義してexportしている
+export const selectData = (state: RootState) => state.covid.dailyData;
+export const selectDailyData = (state: RootState) => state.covid.dailyData;
+export const selectCountry = (state: RootState) => state.covid.country;
+export default covidSlice.reducer;
