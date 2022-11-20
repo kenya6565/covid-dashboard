@@ -153,7 +153,7 @@ const covidSlice = createSlice({
 
 // react componentからstoreのstateを呼び出せるように設定
 // store内のstateにアクセスして返す関数を定義してexportしている
-export const selectData = (state: RootState) => state.covid.dailyData;
+export const selectData = (state: RootState) => state.covid.data;
 export const selectDailyData = (state: RootState) => state.covid.dailyData;
 export const selectCountry = (state: RootState) => state.covid.country;
 export default covidSlice.reducer;
