@@ -16,6 +16,7 @@ const Cards: React.FC = () => {
   return (
     <div className={styles.container}>
       <Grid container spacing={1} justify="center">
+        {/* 感染者数を表すカード */}
         <Grid item xs={12} md={3} component={Card} className={styles.infected}>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -24,11 +25,43 @@ const Cards: React.FC = () => {
             </Typography>
             <Typography variant="h5">
               <CountUp
-            //   1.5秒かけてスタートからendまで数字が上がっていくよ
+                //   1.5秒かけてスタートからendまで数字が上がっていくよ
                 start={0}
                 end={data.confirmed.value}
                 duration={1.5}
                 // 3桁ごとにカンマを入れてくれる
+                separator=","
+              />
+            </Typography>
+          </CardContent>
+        </Grid>
+        {/* 回復者のカード */}
+        <Grid item xs={12} md={3} component={Card} className={styles.recovered}>
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              <AiFillLike /> Recovered persons
+            </Typography>
+            <Typography variant="h5">
+              <CountUp
+                start={0}
+                end={data.recovered.value}
+                duration={1.5}
+                separator=","
+              />
+            </Typography>
+          </CardContent>
+        </Grid>
+        {/* 死傷者のカード */}
+        <Grid item xs={12} md={3} component={Card} className={styles.deaths}>
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              <GiHastyGrave/> Dead persons
+            </Typography>
+            <Typography variant="h5">
+              <CountUp
+                start={0}
+                end={data.deaths.value}
+                duration={1.5}
                 separator=","
               />
             </Typography>
