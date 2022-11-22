@@ -33,12 +33,41 @@ const Chart = () => {
       }}
       options={{
         legend: { display: false },
+        // グラフのタイトル
         title: { display: true },
         text: `Latest status in ${country}`,
       }}
     />
   );
-  return <div></div>;
+
+  //   lineチャートの生成
+  //   dailyDataが存在する時のみ表示
+  const lineChart = dailyData[0] && (
+    <Line
+      data={{
+        labels: dailyData.map(({ reportDate }) => reportDate),
+        datasets: [
+          {
+            data: dailyData.map((data) => data.confirmed.total),
+            label: "Infected",
+            borderColor: "#3333ff",
+            fill: true,
+          },
+          {
+            data: dailyData.map((data) => data.deaths.total),
+            label: "Deaths",
+            borderColor: "#ff3370",
+            fill: true,
+          },
+        ],
+      }}
+    />
+  );
+  return (
+    <div className={styles.container}>
+      {country.length ? barChart : lineChart}
+    </div>
+  );
 };
 
 export default Chart;
