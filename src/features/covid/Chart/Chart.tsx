@@ -34,8 +34,7 @@ const Chart = () => {
       options={{
         legend: { display: false },
         // グラフのタイトル
-        title: { display: true },
-        text: `Latest status in ${country}`,
+        title: { display: true, text: `Latest status in ${country}` },
       }}
     />
   );
