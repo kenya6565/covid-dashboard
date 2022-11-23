@@ -12,6 +12,10 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../app/hooks";
 import { fetchAsyncGet, fetchAsyncGetDaily, selectData } from "../covidSlice";
 import { AppDispatch } from "../../../app/store";
+import SwitchCountry from "../SwitchCountry/SwitchCountry";
+import Chart from "../Chart/Chart";
+import PieChart from "../PieChart/PieChart";
+import Cards from "../Cards/Cards";
 
 // useStylesを使ってmaterialuiを装飾する3ステップ
 // ①constでuseStyles定義
@@ -56,6 +60,24 @@ const DashBoard: React.FC = () => {
           )}
         </Toolbar>
       </AppBar>
+      <Container className={classes.content}>
+        <div className={styles.container}>
+          <SwitchCountry />
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={7}>
+            <Chart />
+          </Grid>
+
+          <Grid item xs={12} md={5}>
+            <PieChart />
+          </Grid>
+
+          <Grid item xs={12} md={12}>
+            <Cards />
+          </Grid>
+        </Grid>
+      </Container>
     </div>
   );
 };
