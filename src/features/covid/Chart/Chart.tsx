@@ -64,6 +64,7 @@ const Chart = () => {
   );
   return (
     <div className={styles.container}>
+      {/* 初期はcountryは""なのでlinechartが表示される　 */}
       {country.length ? barChart : lineChart}
     </div>
   );
